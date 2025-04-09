@@ -36,9 +36,9 @@ public class Product {
     private String description;
 
     /*
-        Hibernate의 @CreationTimestamp 어노테이션은 엔티티가 생성될 때
-        현재 시간을 자동으로 설정해주는 역할을 합니다.
-        이 어노테이션은 Hibernate에서 제공하는 기능으로, JPA 표준은 아닙니다.
+    @CreationTimestamp:
+    - Hibernate의 @CreationTimestamp 어노테이션은 엔티티가 생성될 때 현재 시간을 자동으로 설정해주는 역할
+    - Hibernate에서 제공하는 기능으로, JPA 표준은 아님
      */
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -1,6 +1,6 @@
-package com.sb02.jpa_demo.controller;
+package com.sb02.jpa_demo.service;
 
-public record ProductCreateDto(
+public record RegisterProductCommand(
         String name,
         int price,
         String category,

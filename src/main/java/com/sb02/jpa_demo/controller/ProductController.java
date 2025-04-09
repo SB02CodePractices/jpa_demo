@@ -1,13 +1,12 @@
 package com.sb02.jpa_demo.controller;
 
-import com.sb02.jpa_demo.entity.Product;
+import com.sb02.jpa_demo.service.ProductInfo;
 import com.sb02.jpa_demo.service.ProductService;
+import com.sb02.jpa_demo.service.RegisterProductCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -17,28 +16,38 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Void> registerProduct(
-            @RequestBody ProductCreateDto productCreateDto
+    public ResponseEntity<ProductInfo> registerProduct(
+            @RequestBody ProductCreateRequest requestDto
     ) {
-        productService.saveProduct(
-                productCreateDto.name(),
-                productCreateDto.price(),
-                productCreateDto.category(),
-                productCreateDto.inStock(),
-                productCreateDto.description()
+        return ResponseEntity.ok(productService.createProduct(productCreateDtoToCommand(requestDto)));
+    }
+
+    private RegisterProductCommand productCreateDtoToCommand(ProductCreateRequest requestDto) {
+        return new RegisterProductCommand(
+                requestDto.name(),
+                requestDto.price(),
+                requestDto.category(),
+                requestDto.inStock(),
+                requestDto.description()
         );
-        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductInfo> getProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
     @GetMapping("/_search")
-    public ResponseEntity<List<Product>> searchProducts(
-            @RequestParam String keyword
+    public ResponseEntity<Page<ProductInfo>> searchProducts(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(productService.searchProductByKeyword(keyword));
+        return ResponseEntity.ok(productService.searchProductByKeyword(keyword, page, size));
     }
 
     @GetMapping("/_list")
-    public ResponseEntity<Page<Product>> getProductsByCategory(
+    public ResponseEntity<Page<ProductInfo>> getProductsByCategory(
             @RequestParam String category,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
