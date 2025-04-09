@@ -35,5 +35,5 @@ logging:
       springframework:
         data: DEBUG
     com:
-      example:
-        myapp: DEBUG
+      sb02:
+        jpa_demo: DEBUG
